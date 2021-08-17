@@ -9,14 +9,33 @@ import {
 } from 'react-native';
 import EventListItem from '../components/EventListItem';
 import colors from '../constants/colors';
+import eventsData from '../data/eventsData';
 
 export default function ItineraryScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState(null);
 
+  const sectionListEvents = (array) => {
+    const eventsByDate = array.reduce((acc, event) => {
+      const index = acc.findIndex((element) => element.key === event.date);
+      if (index === -1) {
+        return [
+          ...acc,
+          {
+            key: event.date,
+            data: [{ event }],
+          },
+        ];
+      }
+      acc[index].data = [...acc[index].data, { event }];
+      return acc;
+    }, []);
+    return eventsByDate;
+  };
+
   useEffect(() => {
     const timer1 = setTimeout(() => {
-      setEvents(DATA);
+      setEvents(sectionListEvents(eventsData));
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer1);
@@ -31,19 +50,22 @@ export default function ItineraryScreen({ navigation }) {
         <SectionList
           sections={events}
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => (
-            <EventListItem
-              title={item.title}
-              time={item.time}
-              date={item.date}
-              address={item.address}
-              onPress={() => {
-                navigation.push('Event', { event: item, title: item.title });
-              }}
-            />
-          )}
-          renderSectionHeader={({ section: { date } }) => (
-            <Text style={styles.sectionHeader}>{date}</Text>
+          renderItem={({ item }) => {
+            return (
+              <EventListItem
+                title={item.event.title}
+                time={item.event.time.start}
+                onPress={() => {
+                  navigation.push('Event', {
+                    event: item.event,
+                    title: item.event.title,
+                  });
+                }}
+              />
+            );
+          }}
+          renderSectionHeader={({ section: { key } }) => (
+            <Text style={styles.sectionHeader}>{key}</Text>
           )}
         />
       )}
@@ -69,81 +91,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-const DATA = [
-  {
-    date: 'Fri Oct 15th',
-    data: [
-      {
-        title: 'Bridal Shower',
-        date: '10/15/2021',
-        time: '12:00',
-        address: {
-          street: '30 Kessler Lane',
-          city: 'Oakley',
-          state: 'CA',
-          zip: '94561',
-          lat: 37.97211,
-          long: -121.70954,
-        },
-        invited: 'Invite Only',
-        dressCode: false,
-        details: null,
-      },
-      {
-        title: 'Family Event',
-        date: '10/15/2021',
-        time: '13:30',
-        address: {
-          street: '30 Kessler Lane',
-          city: 'Oakley',
-          state: 'CA',
-          zip: '94561',
-          lat: 37.97211,
-          long: -121.70954,
-        },
-        invited: 'Family Only',
-        dressCode: false,
-        details: null,
-      },
-    ],
-  },
-  {
-    date: 'Sat Oct 16th',
-    data: [
-      {
-        title: 'Private Wedding Ceremony',
-        date: '10/16/2021',
-        time: '12:00',
-        address: {
-          street: '1124 Wispering Pines',
-          city: 'Clayton',
-          state: 'CA',
-          zip: '94517',
-          lat: 37.88826,
-          long: -121.86634,
-        },
-        invited: 'Invite Only',
-        dressCode: true,
-        details: 'After the ceremony, lunch will be provided.',
-      },
-      {
-        title: 'Wedding Recepetion',
-        date: '10/16/2021',
-        time: '17:00',
-        address: {
-          street: '1124 Wispering Pines',
-          city: 'Clayton',
-          state: 'CA',
-          zip: '94517',
-          lat: 37.88826,
-          long: -121.86634,
-        },
-        invited: 'Everyone',
-        dressCode: false,
-        details:
-          'Celebrate the couple with an evening of refreshments, dancing, and more.',
-      },
-    ],
-  },
-];

@@ -17,16 +17,22 @@ export default function Event({ navigation, event }) {
   );
   const [isOnPressIn, setIsOnPressIn] = useState(false);
 
-  const { date, invited, time, title, dressCode, details } = event;
+  const { date, invited, title, dressCode, details } = event;
   const { street, city, state, zip, lat, long } = event.address;
+  const { start, end } = event.time;
 
   const [month, day, year] = date.split('/');
-  const [hour, timeArr] = time.split(':');
-  const minute = timeArr.slice(0, 2);
+  const [startHour, startTimeArr] = start.split(':');
+  const startMinute = startTimeArr.slice(0, 2);
 
-  const d = new Date(year, month - 1, day, hour, minute);
-  const formattedTime = moment(d).format('h:mma');
-  const formattedDate = moment(d).format('dddd MMM D, YYYY');
+  const [endHour, endTimeArr] = end.split(':');
+  const endMinute = endTimeArr.slice(0, 2);
+  const endDate = new Date(year, month - 1, day, endHour, endMinute);
+  const formattedEndTime = moment(endDate).format('h:mma');
+
+  const startDate = new Date(year, month - 1, day, startHour, startMinute);
+  const formattedStartTime = moment(startDate).format('h:mma');
+  const formattedDate = moment(startDate).format('dddd MMM D, YYYY');
 
   const openMap = () => {
     const addrSplit = street.split(' ');
@@ -51,7 +57,9 @@ export default function Event({ navigation, event }) {
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         <Text style={[styles.text, styles.invited]}>{invited}</Text>
-        <Text style={styles.text}>{formattedTime}</Text>
+        <Text style={styles.text}>
+          {formattedStartTime} - {formattedEndTime}
+        </Text>
         <Text style={styles.text}>{formattedDate}</Text>
         <Text style={styles.text}>
           {street} {city}, {state} {zip}
