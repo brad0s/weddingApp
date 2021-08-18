@@ -11,9 +11,7 @@ export default function EventListItem({
   onPress,
   onPressIn,
   onPressOut,
-  isPressed,
-  itemKey,
-  pressedElement,
+  isSelected,
 }) {
   const formattedTime = moment(time, 'HH:mm').format('h:mma');
 
@@ -22,10 +20,7 @@ export default function EventListItem({
       onPress={onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      style={[
-        styles.container,
-        isPressed && pressedElement === itemKey && styles.containerPressed,
-      ]}
+      style={[styles.container, isSelected && styles.containerPressed]}
     >
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{formattedTime}</Text>
@@ -49,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   containerPressed: {
-    backgroundColor: '#FFFFD6',
+    backgroundColor: colors.theme2.cultured,
   },
   title: {
     fontFamily: 'AbhayaLibre_700Bold',

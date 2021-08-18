@@ -14,6 +14,7 @@ import colors from '../constants/colors';
 export default function ItineraryScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
   const sectionListEvents = (array) => {
     const eventsByDate = array.reduce((acc, event) => {
@@ -65,16 +66,25 @@ export default function ItineraryScreen({ navigation }) {
         <SectionList
           sections={events}
           keyExtractor={(item, index) => item + index}
+          extraData={selectedId}
           renderItem={({ item }) => {
+            const isSelected = item.event.title === selectedId;
             return (
               <EventListItem
                 title={item.event.title}
                 time={item.event.time.start}
+                isSelected={isSelected}
                 onPress={() => {
                   navigation.push('Event', {
                     event: item.event,
                     title: item.event.title,
                   });
+                }}
+                onPressIn={() => {
+                  setSelectedId(item.event.title);
+                }}
+                onPressOut={() => {
+                  setSelectedId(null);
                 }}
               />
             );

@@ -2,6 +2,7 @@ export default {
   theme2: {
     raisinBlack: '#171A21',
     jet: '#2E2F2F',
+    cultured: '#F4F5F5',
     pkatinum: '#DFE2E0',
     lightGray: '#D4D8D7',
     babyPowder: '#fffffbff',
