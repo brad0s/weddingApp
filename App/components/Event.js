@@ -67,7 +67,7 @@ export default function Event({ navigation, event }) {
         <Pressable
           style={[styles.button, { backgroundColor }]}
           onPress={() => {
-            // openMap();
+            openMap();
           }}
           onPressIn={() => {
             setBackgroundColor(colors.theme2.xanaduDark);
