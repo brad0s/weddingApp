@@ -7,12 +7,12 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
+import firebase from 'firebase';
 import EventListItem from '../components/EventListItem';
 import colors from '../constants/colors';
-import eventsData from '../data/eventsData';
 
 export default function ItineraryScreen({ navigation }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState(null);
 
   const sectionListEvents = (array) => {
@@ -33,13 +33,28 @@ export default function ItineraryScreen({ navigation }) {
     return eventsByDate;
   };
 
+  const getEvents = () => {
+    setIsLoading(true);
+    firebase
+      .database()
+      .ref('events')
+      .once('value')
+      .then((snapshot) => {
+        const data = snapshot.val();
+        const eventsByDate = sectionListEvents(data);
+        setEvents(eventsByDate);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.warn(error);
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setEvents(sectionListEvents(eventsData));
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer1);
+    getEvents();
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {isLoading ? (

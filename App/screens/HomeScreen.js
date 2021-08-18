@@ -9,12 +9,16 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+
 import Countdown from '../components/Countdown';
 import colors from '../constants/colors';
+import RegisterPushNotifications from '../config/RegisterPushNotifications';
 
 export default function HomeScreen() {
   const [isOnPressIn, setIsOnPressIn] = useState(false);
   const windowWidth = Dimensions.get('window').width;
+
+  // RegisterPushNotifications();
 
   const handleOnPress = () => {
     Linking.openURL(
@@ -33,7 +37,7 @@ export default function HomeScreen() {
         </Text>
         <Image
           style={[styles.image, { width: windowWidth }]}
-          source={require('../assets/images/IMG_0024.jpg')}
+          source={require('../../assets/IMG_0024.jpg')}
         />
         <Pressable
           onPress={handleOnPress}
