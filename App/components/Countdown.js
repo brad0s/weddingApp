@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import moment from 'moment';
 
 export default function Countdown() {
@@ -11,5 +11,11 @@ export default function Countdown() {
     setCountdown(0);
   }
 
-  return <Text>{countdown}</Text>;
+  return <Text style={styles.countdown}>{countdown}</Text>;
 }
+
+const styles = StyleSheet.create({
+  countdown: {
+    fontFamily: 'Roboto_400Regular',
+  },
+});
